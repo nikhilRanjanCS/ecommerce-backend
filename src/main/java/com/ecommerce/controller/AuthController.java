@@ -52,6 +52,7 @@ public class AuthController {
 //		createdUser.setLastName(user.getLastName());
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRole("ROLE_USER");
 		User createdUser = userRepository.save(user);
 		
 		Authentication authentication = new UsernamePasswordAuthenticationToken(createdUser.getEmail(), createdUser.getPassword());
@@ -59,7 +60,9 @@ public class AuthController {
 		
 		String jwt = jwtProvider.generateToken(authentication);
 		
-		AuthResponse authResponse = new AuthResponse(jwt,"Signed up successfully");
+		AuthResponse authResponse = new AuthResponse();
+		authResponse.setJwt(jwt);
+		authResponse.setMessage("user created successfully");
 		
 		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.CREATED);
 	}
@@ -76,7 +79,9 @@ public class AuthController {
 		
 		String jwt = jwtProvider.generateToken(authentication);
 		
-		AuthResponse authResponse = new AuthResponse(jwt,"login successfull!");
+		AuthResponse authResponse = new AuthResponse();
+		authResponse.setJwt(jwt);
+		authResponse.setMessage("user login successfull");
 		
 		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
 	}
@@ -87,7 +92,7 @@ public class AuthController {
 		if(userDetails==null) {
 			throw new BadCredentialsException("Username not found!");
 		}
-		if(passwordEncoder.matches(password, userDetails.getPassword())) {
+		if(!passwordEncoder.matches(password, userDetails.getPassword())) {
 			throw new BadCredentialsException("Incorrect password!");
 		}
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
