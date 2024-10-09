@@ -48,4 +48,10 @@ public class UserProductController {
 	}
 	
 	
+//	@GetMapping("/products/search")
+//	public ResponseEntity<List<Product>> searchProductHandler(@RequestParam String q){
+//		
+//	}
+	
+	
 }
