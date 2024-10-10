@@ -18,6 +18,8 @@ import com.ecommerce.model.Product;
 import com.ecommerce.request.CreateProductRequest;
 import com.ecommerce.response.ApiResponse;
 import com.ecommerce.service.ProductService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("api/admin/products")
@@ -58,6 +60,33 @@ public class AdminProductController {
 		List<Product> products = productService.getAllProducts();
 		
 		return products;
+		
+	}
+	
+	@PutMapping("{productId}/update")
+	public ResponseEntity<Product> updateProduct(@RequestBody Product req,
+			@PathVariable Long productId) throws ProductException {
+		
+		
+		Product product = productService.updateProduct(productId, req);
+		
+		return new ResponseEntity<Product>(product,HttpStatus.CREATED);
+	}
+	
+	
+	@PostMapping("/createmultipleproducts")
+	public ResponseEntity<ApiResponse> createMultipleProducts(@RequestBody
+			CreateProductRequest[] req){
+		
+		for(CreateProductRequest product  : req) {
+			productService.createProduct(product);
+		}
+		
+		ApiResponse res = new ApiResponse();
+		res.setMessage("all products added successfully!");
+		res.setStatus(true);
+		
+		return new ResponseEntity<ApiResponse>(res,HttpStatus.CREATED);
 		
 	}
 	
