@@ -1,5 +1,6 @@
 package com.ecommerce.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class CartServiceImpl implements CartService {
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	private CartItem cartItem;
 	
@@ -56,6 +58,7 @@ public class CartServiceImpl implements CartService {
 			cartItem.setPrice(request.getPrice()*request.getQuantity());
 			cartItem.setDiscountedPrice(request.getPrice());
 			cartItem.setQuantity(request.getQuantity());
+			
 		}
 		
 		else {
@@ -67,9 +70,11 @@ public class CartServiceImpl implements CartService {
 			cartItem.setPrice(request.getPrice()*request.getQuantity());
 			cartItem.setDiscountedPrice(request.getPrice());
 			cartItem.setQuantity(request.getQuantity());
+			
 		}
 		
 		cart.getCartItems().add(cartItem);
+		cartRepository.save(cart);
 		
 		return "item added to cart successfully";
 	}

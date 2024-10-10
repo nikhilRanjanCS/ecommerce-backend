@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.config.JwtProvider;
 import com.ecommerce.exception.UserException;
+import com.ecommerce.model.Cart;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.request.LoginRequest;
 import com.ecommerce.response.AuthResponse;
+import com.ecommerce.service.CartService;
 import com.ecommerce.service.UserDetailsServiceImpl;
 
 @RestController
@@ -38,6 +40,9 @@ public class AuthController {
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 	
+	@Autowired
+	private CartService cartService;
+	
 	
 	@PostMapping("/signup")
 	public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws UserException{
@@ -46,14 +51,11 @@ public class AuthController {
 			throw new UserException("Email already exists!");
 		}
 		
-//		User createdUser = new User();
-//		createdUser.setEmail(user.getEmail());
-//		createdUser.setFirstName(user.getFirstName());
-//		createdUser.setLastName(user.getLastName());
-		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRole("ROLE_USER");
 		User createdUser = userRepository.save(user);
+		
+		Cart cart = cartService.createCart(createdUser);
 		
 		Authentication authentication = new UsernamePasswordAuthenticationToken(createdUser.getEmail(), createdUser.getPassword());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
