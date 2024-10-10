@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Page<Product> getAllProducts(String category, List<String> colors, List<String> sizes, Integer minPrice,
+	public Page<Product> getFilteredProducts(String category, List<String> colors, List<String> sizes, Integer minPrice,
 			Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
 		
 		
@@ -162,5 +162,15 @@ public class ProductServiceImpl implements ProductService {
 		
 		return filteredProducts;
 	}
+
+	@Override
+	public List<Product> getAllProducts() {
+		
+		List<Product> allProducts = productRepository.findAll();
+		
+		return allProducts;
+	}
+	
+	
 
 }
