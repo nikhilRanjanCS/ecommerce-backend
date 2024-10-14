@@ -4,6 +4,7 @@ package com.ecommerce.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.exception.CartItemException;
 import com.ecommerce.exception.ProductException;
 import com.ecommerce.model.Cart;
 import com.ecommerce.model.CartItem;
@@ -43,7 +44,8 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public String addCartItem(Long userId, AddItemRequest request) throws ProductException {
+	public String addCartItem(Long userId, AddItemRequest request) throws ProductException,
+	CartItemException{
 		
 		
 		
@@ -52,24 +54,31 @@ public class CartServiceImpl implements CartService {
 		if(cartItemService.ifItemExists(cart, product, request.getSize(), userId)==null) {
 			cartItem = new CartItem();
 			cartItem.setCart(cart);
+			cartItem.setUserId(userId);
 			cartItem.setProduct(product);
 			cartItem.setSize(request.getSize());
-			cartItem.setUserId(userId);
-			cartItem.setPrice(request.getPrice()*request.getQuantity());
-			cartItem.setDiscountedPrice(request.getPrice());
 			cartItem.setQuantity(request.getQuantity());
+			cartItem.setPrice(product.getPrice()*request.getQuantity());
+			cartItem.setDiscountedPrice(product.getDiscountedPrice()*request.getQuantity());
+			
 			
 		}
 		
 		else {
 			cartItem = cartItemService.ifItemExists(cart, product, request.getSize(), userId);
 			cartItem.setCart(cart);
+			cartItem.setUserId(userId);
 			cartItem.setProduct(product);
 			cartItem.setSize(request.getSize());
-			cartItem.setUserId(userId);
-			cartItem.setPrice(request.getPrice()*request.getQuantity());
-			cartItem.setDiscountedPrice(request.getPrice());
-			cartItem.setQuantity(request.getQuantity());
+			cartItem.setQuantity(request.getQuantity()+
+					cartItemService.findCartItemByProductId(product.getId(),
+							userId).getQuantity());
+			cartItem.setPrice(product.getPrice()*request.getQuantity()
+					+cartItemService.findCartItemByProductId(product.getId(),
+							userId).getPrice());
+			cartItem.setDiscountedPrice(product.getDiscountedPrice()*request.getQuantity()
+					+cartItemService.findCartItemByProductId(product.getId(),
+							userId).getDiscountedPrice());
 			
 		}
 		
@@ -84,7 +93,7 @@ public class CartServiceImpl implements CartService {
 		
 		Cart cart = cartRepository.findCartByUserId(userId);
 		
-		int totalPrice = 0;
+		double totalPrice = 0;
 		int totalDiscountedPrice = 0;
 		int totalItem = 0;
 		
@@ -97,7 +106,7 @@ public class CartServiceImpl implements CartService {
 		cart.setTotalDiscountedPrice(totalDiscountedPrice);
 		cart.setTotalPrice(totalPrice);
 		cart.setTotalItem(totalItem);
-		cart.setDiscount(totalPrice-totalDiscountedPrice);
+		cart.setDiscount((int)totalPrice-totalDiscountedPrice);
 		
 		return cartRepository.save(cart);
 	}

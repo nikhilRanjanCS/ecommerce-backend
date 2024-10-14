@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.exception.CartItemException;
+import com.ecommerce.exception.ProductException;
 import com.ecommerce.exception.UserException;
 import com.ecommerce.model.Cart;
 import com.ecommerce.model.CartItem;
@@ -19,5 +20,8 @@ public interface CartItemService {
 	CartItemException, UserException;
 	
 	public CartItem findCartItemById(Long cartItemId) throws CartItemException;
+	
+	public CartItem findCartItemByProductId(Long productId, Long userId) throws CartItemException,
+	ProductException;
 	
 }

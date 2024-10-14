@@ -89,4 +89,19 @@ public class CartItemServiceImpl implements CartItemService {
 		
 	}
 	
+	@Override
+	public CartItem findCartItemByProductId(Long productId, Long userId) throws CartItemException{
+		
+		CartItem item = cartItemRepository.findCartItemByproductId(productId,
+				userId);
+		if(item!=null) {
+			return item;
+		}
+		else {
+			throw new CartItemException("user has no cart item with given productId : "
+		+productId);
+		}
+		
+	}
+	
 }

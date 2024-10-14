@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.exception.CartItemException;
 import com.ecommerce.exception.ProductException;
 import com.ecommerce.exception.UserException;
 import com.ecommerce.model.Cart;
@@ -47,7 +48,7 @@ public class CartController {
 	@PutMapping("/addtocart")
 	public ResponseEntity<ApiResponse> addItemToCart(@RequestBody AddItemRequest req,
 			@RequestHeader("Authorization") String jwt) throws UserException,
-	ProductException {
+	ProductException,CartItemException {
 		
 		
 		User user = userService.findUserProfileByJwt(jwt);

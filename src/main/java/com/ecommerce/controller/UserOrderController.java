@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class UserOrderController {
 	private UserService userService;
 	
 	
-	@PostMapping("/")
+	@PostMapping("/create")
 	public ResponseEntity<Order> createOrder(@RequestBody Address shippingAddress,
 			@RequestHeader("Authorization") String jwt) throws UserException{
 		
@@ -64,6 +65,27 @@ public class UserOrderController {
 		Order order = orderService.findOrderById(orderId);
 		
 		return new ResponseEntity<>(order,HttpStatus.OK);
+		
+	}
+	
+	@PutMapping("/{orderId}/confirm")
+	public ResponseEntity<Order> confirmOrderHandler(@PathVariable Long orderId,
+			@RequestHeader("Authorization") String jwt) throws OrderException{
+		
+		Order confirmedOrder = orderService.confirmOrder(orderId);
+		
+		return new ResponseEntity<>(confirmedOrder,HttpStatus.OK);
+		
+	}
+	
+	
+	@PutMapping("/{orderId}/cancel")
+	public ResponseEntity<Order> cancelOrderHandler(@PathVariable Long orderId,
+			@RequestHeader("Authorization") String jwt) throws OrderException{
+		
+		Order cancelledOrder = orderService.cancelOrder(orderId);
+		
+		return new ResponseEntity<>(cancelledOrder,HttpStatus.OK);
 		
 	}
 	

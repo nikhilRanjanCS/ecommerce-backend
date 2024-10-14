@@ -35,43 +35,43 @@ public class AdminOrderController {
 	}
 	
 	
-	@PutMapping("/{orderId}/confirmed")
-	public ResponseEntity<Order> getConfirmedOrderHandler(@PathVariable Long orderId,
+	@PutMapping("/{orderId}/confirm")
+	public ResponseEntity<Order> confirmOrderHandler(@PathVariable Long orderId,
 			@RequestHeader("Authorization") String jwt) throws OrderException{
 		
-		Order confirmedOrder = orderService.confirmedOrder(orderId);
+		Order confirmedOrder = orderService.confirmOrder(orderId);
 		
 		return new ResponseEntity<>(confirmedOrder,HttpStatus.OK);
 		
 	}
 	
 	
-	@PutMapping("/{orderId}/shipped")
-	public ResponseEntity<Order> getShippedOrderHandler(@PathVariable Long orderId,
+	@PutMapping("/{orderId}/ship")
+	public ResponseEntity<Order> shipOrderHandler(@PathVariable Long orderId,
 			@RequestHeader("Authorization") String jwt) throws OrderException{
 		
-		Order shippedOrder = orderService.shippedOrder(orderId);
+		Order shippedOrder = orderService.shipOrder(orderId);
 		
 		return new ResponseEntity<>(shippedOrder,HttpStatus.OK);
 		
 	}
 	
-	@PutMapping("/{orderId}/delivered")
-	public ResponseEntity<Order> getDeliveredOrderHandler(@PathVariable Long orderId,
+	@PutMapping("/{orderId}/deliver")
+	public ResponseEntity<Order> deliverOrderHandler(@PathVariable Long orderId,
 			@RequestHeader("Authorization") String jwt) throws OrderException{
 		
-		Order deliveredOrder = orderService.deliveredOrder(orderId);
+		Order deliveredOrder = orderService.deliverOrder(orderId);
 		
 		return new ResponseEntity<>(deliveredOrder,HttpStatus.OK);
 		
 	}
 	
 	
-	@PutMapping("/{orderId}/cancelled")
-	public ResponseEntity<Order> getCancelledOrderHandler(@PathVariable Long orderId,
+	@PutMapping("/{orderId}/cancel")
+	public ResponseEntity<Order> cancelOrderHandler(@PathVariable Long orderId,
 			@RequestHeader("Authorization") String jwt) throws OrderException{
 		
-		Order cancelledOrder = orderService.cancelledOrder(orderId);
+		Order cancelledOrder = orderService.cancelOrder(orderId);
 		
 		return new ResponseEntity<>(cancelledOrder,HttpStatus.OK);
 		
