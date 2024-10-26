@@ -20,6 +20,7 @@ import com.ecommerce.model.Cart;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.request.LoginRequest;
+import com.ecommerce.response.ApiResponse;
 import com.ecommerce.response.AuthResponse;
 import com.ecommerce.service.CartService;
 import com.ecommerce.service.UserDetailsServiceImpl;
@@ -75,17 +76,34 @@ public class AuthController {
 		String username = loginRequest.getEmail();
 		String password = loginRequest.getPassword();
 		
-		Authentication authentication = authenticate(username,password);
-		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		String jwt = jwtProvider.generateToken(authentication);
-		
+//		Authentication authentication = authenticate(username,password);
+//		
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+//		
+//		String jwt = jwtProvider.generateToken(authentication);
+//		
+//		AuthResponse authResponse = new AuthResponse();
+//		authResponse.setJwt(jwt);
+//		authResponse.setMessage("user login successfull");
+//		
+//		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
 		AuthResponse authResponse = new AuthResponse();
-		authResponse.setJwt(jwt);
-		authResponse.setMessage("user login successfull");
-		
-		return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
+		try {
+			Authentication authentication = authenticate(username,password);
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			String jwt = jwtProvider.generateToken(authentication);
+			
+			
+			authResponse.setJwt(jwt);
+			authResponse.setMessage("user login successfull");
+			
+			return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
+		} catch(Exception e) {
+			authResponse.setMessage(e.getMessage());
+			return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.UNAUTHORIZED);
+		}
 	}
 	
 	private Authentication authenticate(String username, String password) {
