@@ -71,7 +71,7 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponse> loginUserHandler(@RequestBody LoginRequest loginRequest) throws UserException{
+	public ResponseEntity<AuthResponse> loginUserHandler(@RequestBody LoginRequest loginRequest){
 		
 		String username = loginRequest.getEmail();
 		String password = loginRequest.getPassword();
@@ -113,7 +113,7 @@ public class AuthController {
 			throw new BadCredentialsException("Username not found!");
 		}
 		if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-			throw new BadCredentialsException("Incorrect password!");
+			throw new BadCredentialsException("Incorrect username and password!");
 		}
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		
