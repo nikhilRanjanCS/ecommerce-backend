@@ -23,19 +23,32 @@ public class UserProductController {
 	@Autowired
 	private ProductService productService;
 	
+//	@GetMapping("/products")
+//	public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String
+//			category, @RequestParam List<String> colors, @RequestParam List<String> sizes,
+//			@RequestParam Integer minPrice, @RequestParam Integer maxPrice, 
+//			@RequestParam Integer minDiscount, @RequestParam String sort, 
+//			@RequestParam String stock, @RequestParam Integer pageNumber, 
+//			@RequestParam Integer pageSize){
+//		
+//		Page<Product> res = productService.getFilteredProducts(category, colors, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize);
+//		
+//		
+//		return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
+//	}
+	
 	@GetMapping("/products")
 	public ResponseEntity<Page<Product>> findProductByCategoryHandler(@RequestParam String
 			category, @RequestParam List<String> colors, @RequestParam List<String> sizes,
-			@RequestParam Integer minPrice, @RequestParam Integer maxPrice, 
-			@RequestParam Integer minDiscount, @RequestParam String sort, 
-			@RequestParam String stock, @RequestParam Integer pageNumber, 
+			 @RequestParam String sort, @RequestParam Integer pageNumber, 
 			@RequestParam Integer pageSize){
 		
-		Page<Product> res = productService.getFilteredProducts(category, colors, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize);
+		Page<Product> res = productService.getFilteredProducts(category, colors, sizes, sort, pageNumber, pageSize);
 		
 		
 		return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
 	}
+	
 	
 	@GetMapping("/products/id/{productId}")
 	public ResponseEntity<Product> getProductByIdHandler(@PathVariable Long productId)
