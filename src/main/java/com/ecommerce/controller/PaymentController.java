@@ -43,15 +43,16 @@ public class PaymentController {
 	
 	@PostMapping("/payments/{orderId}")
 	public ResponseEntity<PaymentLinkResponse> createPaymentLink(@PathVariable
-			Long orderId) throws OrderException, RazorpayException{
+			Long orderId, @RequestHeader("Authorization") String jwt)
+					throws OrderException, RazorpayException{
 		
 		Order order = orderService.findOrderById(orderId);
 		
 		try {
 			
-			RazorpayClient razorpayClient = new RazorpayClient(apiKey, apiSecret);
+			RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecret);
 			JSONObject paymentLinkRequest = new JSONObject();
-			paymentLinkRequest.put("amount", (int)order.getTotalPrice()*100);
+			paymentLinkRequest.put("amount", (int)(order.getTotaldiscountedPrice())*100);
 			paymentLinkRequest.put("currency", "INR");
 			
 			JSONObject customer = new JSONObject();
@@ -61,21 +62,32 @@ public class PaymentController {
 			customer.put("name", user.getFirstName()+" "
 			+user.getLastName());
 			customer.put("email", user.getEmail());
-//			paymentLinkRequest.put("notes", customer);
+			customer.put("contact", user.getMobile());
+//			
 			
-//			JSONObject notification = new JSONObject();
-//			customer.put("sms", true);
-//			customer.put("email", true);
+			paymentLinkRequest.put("customer", customer);
 			
-			paymentLinkRequest.put("notes", customer);
+			
+			JSONObject notify = new JSONObject();
+			notify.put("sms",true);
+			notify.put("email",true);
+			paymentLinkRequest.put("notify",notify);
+			
+//			paymentLinkRequest.put("upi_link", true);
 			
 			paymentLinkRequest.put("callback_url", "http://localhost:5173/payment/"+orderId);
 			paymentLinkRequest.put("callback_method", "get");
 			
-			PaymentLink paymentLink = razorpayClient.paymentLink.create(paymentLinkRequest);
+			
+			PaymentLink paymentLink = razorpay.paymentLink.create(paymentLinkRequest);
 			
 			String paymentId = paymentLink.get("id");
 			String paymentUrl = paymentLink.get("short_url");
+			
+			
+			System.out.println(paymentId);
+			System.out.println(paymentUrl);
+			
 			
 			PaymentLinkResponse res = new PaymentLinkResponse();
 			res.setPaymentLinkId(paymentId);
@@ -92,14 +104,16 @@ public class PaymentController {
 	}
 	
 	@GetMapping("/payments")
-	public ResponseEntity<ApiResponse> redirect(@RequestParam String paymentId,
-			@RequestParam Long orderId) throws OrderException, RazorpayException{
+	public ResponseEntity<ApiResponse> redirect(@RequestParam(name="payment_id")
+	String paymentId,@RequestParam(name="order_id") Long orderId) throws OrderException, RazorpayException{
+		
+		System.out.println(paymentId);
 		
 		Order order = orderService.findOrderById(orderId);
-		RazorpayClient razorpayClient = new RazorpayClient(apiKey, apiSecret);
+		RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecret);
 		try {
 			
-			Payment payment = razorpayClient.payments.fetch(paymentId);
+			Payment payment = razorpay.payments.fetch(paymentId);
 			if(payment.get("status").equals("captured")) {
 				order.getPaymentDetails().setPaymentId(paymentId);
 				order.getPaymentDetails().setPaymentStatus("COMPLETED");
