@@ -27,6 +27,17 @@ public class JwtValidator extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
+		
+		String path = request.getRequestURI();
+		
+//		System.out.println("Request URI: " + path);
+		
+	    if (!path.startsWith("/api/")) {
+	        filterChain.doFilter(request, response);
+	        return;
+	    }
+		
+		
 		String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 		if(jwt!=null) {
 			jwt = jwt.substring(7);
