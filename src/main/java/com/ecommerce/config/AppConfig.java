@@ -35,7 +35,7 @@ public class AppConfig {
 					public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 						CorsConfiguration cfg = new CorsConfiguration();
 						cfg.setAllowedOrigins(Arrays.asList("http://localhost:5173",
-								"https://ncloset.vercel.app/"));
+								"https://ncloset-gewb9b31k-nikhil-ranjans-projects-66e2205b.vercel.app/"));
 						cfg.setAllowedMethods(Collections.singletonList("*"));
 						cfg.setAllowCredentials(true);
 						cfg.setAllowedHeaders(Collections.singletonList("*"));
