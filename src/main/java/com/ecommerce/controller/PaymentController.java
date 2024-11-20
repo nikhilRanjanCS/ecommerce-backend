@@ -75,7 +75,7 @@ public class PaymentController {
 			
 //			paymentLinkRequest.put("upi_link", true);
 			
-			paymentLinkRequest.put("callback_url", "http://localhost:5173/payment/"+orderId);
+			paymentLinkRequest.put("callback_url", "https://ecommerce-backend-production-6265.up.railway.app/payment/"+orderId);
 			paymentLinkRequest.put("callback_method", "get");
 			
 			
