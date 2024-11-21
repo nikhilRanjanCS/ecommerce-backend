@@ -75,7 +75,7 @@ public class PaymentController {
 			
 //			paymentLinkRequest.put("upi_link", true);
 			
-			paymentLinkRequest.put("callback_url", "https://www.ncloset.vercel.app/payment/"+orderId);
+			paymentLinkRequest.put("callback_url", "https://ncloset.vercel.app/payment/"+orderId);
 			paymentLinkRequest.put("callback_method", "get");
 			
 			
